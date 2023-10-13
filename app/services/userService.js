@@ -1,3 +1,4 @@
+const { use } = require("..");
 const UserRepository = require("../repositories/userRepository");
 const Bycrypt = require("../utils/bycrypt");
 const { JWT } = require("../utils/constant");
@@ -52,6 +53,14 @@ const register = async ({ email, name, password }) => {
       photo_profile:
         "https://res.cloudinary.com/dhtypvjsk/image/upload/v1691732035/nopicture_u5efnz.png",
     });
+    if (!createUser) {
+      return {
+        status: 200,
+        message: "gagal mendaftar",
+        data: null,
+      };
+    }
+    console.log(createUser);
     user = JSON.parse(JSON.stringify(createUser));
     delete user.password;
     return {
@@ -134,4 +143,30 @@ const Login = async ({ email, password }) => {
     };
   }
 };
-module.exports = { register, Login };
+
+const getUserByUuid = async ({ uuid }) => {
+  try {
+    const getUser = await UserRepository.findByUuid(uuid);
+    if (!getUser) {
+      return {
+        status: 400,
+        message: "User not found",
+        data: null,
+      };
+    }
+    user = JSON.parse(JSON.stringify(getUser));
+    delete user.password;
+    return {
+      status: 200,
+      message: "success getUser",
+      data: user,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+};
+module.exports = { register, Login, getUserByUuid };
