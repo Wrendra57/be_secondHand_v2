@@ -2,7 +2,7 @@ const express = require("express");
 const controllers = require("../app/controllers");
 
 const apiRouter = express.Router();
-
+const middleware = require("../app/middleware/authorization");
 /**
  * TODO: Implement your own API
  *       implementations
@@ -20,6 +20,11 @@ apiRouter.post("/api/v1/register", controllers.api.v1.userController.Register);
 apiRouter.post(
   "/api/v1/login",
   controllers.api.v1.userController.LoginController
+);
+apiRouter.get(
+  "/api/v1/user",
+  middleware.parseToken,
+  controllers.api.v1.userController.GetUserDetail
 );
 /**
  * TODO: Delete this, this is just a demonstration of

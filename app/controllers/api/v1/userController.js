@@ -30,4 +30,17 @@ const LoginController = async (req, res, next) => {
     };
   }
 };
-module.exports = { Register, LoginController };
+
+const GetUserDetail = async (req, res, next) => {
+  try {
+    const getUser = await UserService.getUserByUuid({ uuid: req.user.uuid });
+    return res.status(getUser.status).json(getUser);
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+};
+module.exports = { Register, LoginController, GetUserDetail };
