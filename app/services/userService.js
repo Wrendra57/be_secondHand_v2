@@ -3,6 +3,8 @@ const UserRepository = require("../repositories/userRepository");
 const Bycrypt = require("../utils/bycrypt");
 const { JWT } = require("../utils/constant");
 const jwt = require("jsonwebtoken");
+const cloudinary = require("../utils/cloudinaryConfig");
+const uploadImage = require("../utils/uploader");
 const register = async ({ email, name, password }) => {
   try {
     if (name === "" || !name) {
@@ -169,4 +171,84 @@ const getUserByUuid = async ({ uuid }) => {
     };
   }
 };
-module.exports = { register, Login, getUserByUuid };
+
+const updateUser = async ({ name, city, address, noHp, files, uuid }) => {
+  try {
+    if (!name || name === "") {
+      return {
+        status: 400,
+        message: "Nama tidak boleh kosong",
+        data: null,
+      };
+    }
+    if (!city || city === "") {
+      return {
+        status: 400,
+        message: "Kota tidak boleh kosong",
+        data: null,
+      };
+    }
+    if (!address || address === "") {
+      return {
+        status: 400,
+        message: "Alamat tidak boleh kosong",
+        data: null,
+      };
+    }
+    if (!noHp || noHp === "") {
+      return {
+        status: 400,
+        message: "No HP tidak boleh kosong",
+        data: null,
+      };
+    }
+    const getUser = await UserRepository.findByUuid(uuid);
+    if (!getUser) {
+      return {
+        status: 400,
+        message: "User tidak ditemukan",
+        data: null,
+      };
+    }
+    let payload = {
+      name: name,
+      city: city,
+      address: address,
+      no_hp: noHp,
+    };
+
+    if (files.length > 0) {
+      const upload = await uploadImage({ image: files[0] });
+      payload = {
+        ...payload,
+        photo_profile: upload.secure_url,
+      };
+    }
+    const update = await UserRepository.updateUser({
+      payload: payload,
+      uuid: uuid,
+    });
+    if (!update) {
+      return {
+        status: 400,
+        message: "update gagal",
+        data: null,
+      };
+    }
+    const result = await UserRepository.findByUuid(uuid);
+    user = JSON.parse(JSON.stringify(result));
+    delete user.password;
+    return {
+      status: 200,
+      message: "update profile berhasil",
+      data: user,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+};
+module.exports = { register, Login, getUserByUuid, updateUser };
