@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.Product.hasMany(models.Image_product, {
+        foreignKey: "id_product",
+      });
+      models.Product.hasMany(models.Order, {
+        foreignKey: "id_product",
+      });
       models.Product.belongsTo(models.User, {
         foreignKey: "uuid",
       });
@@ -16,16 +22,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   Product.init(
     {
+      id_product: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4 },
       id_seller: DataTypes.UUID,
-      product_name: DataTypes.STRING,
-      price: DataTypes.STRING,
+      name_product: DataTypes.STRING,
       category: DataTypes.STRING,
+      price: DataTypes.INTEGER,
       description: DataTypes.STRING,
-      image_1: DataTypes.STRING,
-      image_2: DataTypes.STRING,
-      image_3: DataTypes.STRING,
-      image_4: DataTypes.STRING,
-      status: DataTypes.STRING,
+      stock: DataTypes.INTEGER,
+      // deletedAt: DataTypes.STRING
     },
     {
       sequelize,
