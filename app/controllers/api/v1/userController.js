@@ -43,4 +43,25 @@ const GetUserDetail = async (req, res, next) => {
     };
   }
 };
-module.exports = { Register, LoginController, GetUserDetail };
+const UpdateUser = async (req, res) => {
+  try {
+    const { name, city, address, noHp } = req.body;
+
+    const update = await UserService.updateUser({
+      name: name,
+      city: city,
+      address: address,
+      noHp: noHp,
+      files: req.files,
+      uuid: req.user.uuid,
+    });
+    return res.status(200).json(update);
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+};
+module.exports = { Register, LoginController, GetUserDetail, UpdateUser };

@@ -40,6 +40,18 @@ const findByUuid = async (uuid) => {
     };
   }
 };
+
+const updateUser = async ({ payload, uuid }) => {
+  try {
+    console.log(payload);
+    
+    const update = await User.update(payload, { where: { uuid: uuid } });
+    console.log(update);
+    return update;
+  } catch (error) {
+    console.log("sad");
+  }
+};
 const deleteBY = async (params) => {
   try {
     const adelete = await User.destroy({
@@ -58,4 +70,4 @@ const deleteBY = async (params) => {
   }
 };
 
-module.exports = { createUser, findByEmail, deleteBY, findByUuid };
+module.exports = { createUser, findByEmail, deleteBY, findByUuid, updateUser };

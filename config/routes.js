@@ -3,6 +3,7 @@ const controllers = require("../app/controllers");
 
 const apiRouter = express.Router();
 const middleware = require("../app/middleware/authorization");
+const upload = require("../app/utils/multer");
 /**
  * TODO: Implement your own API
  *       implementations
@@ -25,6 +26,12 @@ apiRouter.get(
   "/api/v1/user",
   middleware.parseToken,
   controllers.api.v1.userController.GetUserDetail
+);
+apiRouter.post(
+  "/api/v1/user/update",
+  middleware.parseToken,
+  upload.any(),
+  controllers.api.v1.userController.UpdateUser
 );
 /**
  * TODO: Delete this, this is just a demonstration of
