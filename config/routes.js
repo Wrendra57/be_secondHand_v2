@@ -33,6 +33,21 @@ apiRouter.post(
   upload.any(),
   controllers.api.v1.userController.UpdateUser
 );
+
+// ===================================================
+// API PRODUCT
+// ===================================================
+apiRouter.post(
+  "/api/v1/product",
+  middleware.parseToken,
+  upload.any(),
+  controllers.api.v1.productController.createProduct
+);
+apiRouter.get(
+  "/api/v1/product/:limit/:offset",
+  controllers.api.v1.productController.getListProduct
+);
+
 /**
  * TODO: Delete this, this is just a demonstration of
  *       error handler
