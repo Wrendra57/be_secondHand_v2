@@ -47,7 +47,10 @@ apiRouter.get(
   "/api/v1/product/:limit/:offset",
   controllers.api.v1.productController.getListProduct
 );
-
+apiRouter.get(
+  "/api/v1/product/:uuid",
+  controllers.api.v1.productController.getProductById
+);
 /**
  * TODO: Delete this, this is just a demonstration of
  *       error handler

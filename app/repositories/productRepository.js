@@ -13,22 +13,56 @@ const createProduct = async (params) => {
 const getListProduct = async ({ limit, offset }) => {
   try {
     const getList = await sequelize.query(`
-    SELECT p."id" as "id",
-          p."id_product" as "id_product",
-          p."id_seller" as "id_seller",
-          p."name_product" as "name_product",
+    SELECT 
+          p."id" as "id",
+          p."id_product"  ,
+          p."id_seller"  ,
+          p."name_product" ,
           p."stock",
           p."price",
           p."category",
-          json_agg(ip."url") as "foto"
+          ip."url" as "foto"
     FROM public."Products" as "p"
-    LEFT JOIN public."Image_products" as "ip" ON ip."id_product" = p."id_product"
+    LEFT JOIN (
+        SELECT DISTINCT ON (id_product) "id_product", "url"
+        FROM public."Image_products"
+        ORDER BY "id_product", "id" ASC
+    ) AS ip ON ip."id_product" = p."id_product"
     WHERE p."stock" != 0
-    GROUP BY p."id", p."id_product", p."id_seller", p."name_product"
-    ORDER BY p."id" ASC
     LIMIT ${limit} OFFSET ${offset};
     `);
     return getList[0];
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const getProductById = async (params) => {
+  try {
+    const getProduct = await sequelize.query(`
+        SELECT
+            p."id",
+            p."id_product",
+            p."id_seller",
+            p."name_product",
+            p."stock",
+            p."price",
+            p."category",
+            foto."url" as "foto",
+            usr."name" as "name_seller",
+            usr."uuid" as "user_id",
+            usr."photo_profile" as "avatar",
+            usr."city"
+        FROM public."Products" as "p"
+        LEFT JOIN (
+            SELECT "id_product", json_agg("url") as "url"
+            FROM public."Image_products"
+            GROUP BY "id_product"
+        ) as foto ON foto."id_product" = p."id_product"
+        LEFT JOIN public."Users" as "usr" ON p."id_seller" = usr."uuid"
+        WHERE p."id_product" = '${params}';
+    `);
+    return getProduct[0];
   } catch (error) {
     console.log(error.message);
   }
@@ -47,4 +81,9 @@ const destroyProduct = async (id_product) => {
   }
 };
 
-module.exports = { getListProduct, destroyProduct, createProduct };
+module.exports = {
+  getProductById,
+  getListProduct,
+  destroyProduct,
+  createProduct,
+};

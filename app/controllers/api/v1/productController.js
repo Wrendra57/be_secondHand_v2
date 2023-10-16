@@ -36,5 +36,16 @@ const getListProduct = async (req, res, next) => {
     };
   }
 };
-
-module.exports = { createProduct, getListProduct };
+const getProductById = async (req, res, next) => {
+  try {
+    const getProduct = await ProductService.getProductById(req.params.uuid);
+    return res.status(getProduct.status).json(getProduct);
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+};
+module.exports = { getProductById, createProduct, getListProduct };

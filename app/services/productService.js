@@ -172,4 +172,38 @@ const getListProduct = async ({ limit, offset }) => {
     };
   }
 };
-module.exports = { getListProduct, createProduct };
+
+const getProductById = async (id_product) => {
+  try {
+    if (!id_product) {
+      return {
+        status: 400,
+        message: "id product tidak boleh kosong",
+        data: null,
+      };
+    }
+
+    const getProduct = await ProductRepository.getProductById(id_product);
+
+    if (!getProduct || getProduct.length === 0) {
+      return {
+        status: 400,
+        message: "Produk tidak ditemukan",
+        data: null,
+      };
+    }
+    return {
+      status: 200,
+      message: "sukses get product",
+      data: getProduct[0],
+    };
+  } catch (error) {
+    console.log(error.message);
+    return {
+      status: 400,
+      message: error.message,
+      data: null,
+    };
+  }
+};
+module.exports = { getProductById, getListProduct, createProduct };
