@@ -31,6 +31,13 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
       },
+      isAccept: {
+        type: Sequelize.BOOLEAN,
+      },
+      price: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

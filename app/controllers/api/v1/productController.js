@@ -48,4 +48,26 @@ const getProductById = async (req, res, next) => {
     };
   }
 };
-module.exports = { getProductById, createProduct, getListProduct };
+const getProductBySeller = async (req, res, next) => {
+  try {
+    console.log("offset");
+    const getProduct = await ProductService.getListProductBySeller({
+      uuid: req.user.uuid,
+      offset: req.params.offset,
+    });
+    return res.status(getProduct.status).json(getProduct);
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+};
+
+module.exports = {
+  getProductById,
+  createProduct,
+  getListProduct,
+  getProductBySeller,
+};

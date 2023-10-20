@@ -26,6 +26,8 @@ module.exports = (sequelize, DataTypes) => {
       id_buyer: DataTypes.UUID,
       id_product: DataTypes.UUID,
       status: DataTypes.STRING,
+      isAccept: DataTypes.BOOLEAN,
+      price: DataTypes.INTEGER,
     },
     {
       sequelize,

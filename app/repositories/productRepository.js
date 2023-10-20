@@ -48,6 +48,7 @@ const getProductById = async (params) => {
             p."stock",
             p."price",
             p."category",
+            p."description",
             foto."url" as "foto",
             usr."name" as "name_seller",
             usr."uuid" as "user_id",
@@ -62,6 +63,7 @@ const getProductById = async (params) => {
         LEFT JOIN public."Users" as "usr" ON p."id_seller" = usr."uuid"
         WHERE p."id_product" = '${params}';
     `);
+    // console.log(getProduct);
     return getProduct[0];
   } catch (error) {
     console.log(error.message);
@@ -81,9 +83,39 @@ const destroyProduct = async (id_product) => {
   }
 };
 
+const getProductSeller = async ({ uuid, offset }) => {
+  try {
+    const getProduct = await sequelize.query(`
+        SELECT 
+            p."id" as "id",
+            p."id_product"  ,
+            p."id_seller"  ,
+            p."name_product" ,
+            p."stock",
+            p."price",
+            p."category",
+            ip."url" as "foto"
+        FROM public."Products" as "p"
+        LEFT JOIN (
+            SELECT DISTINCT ON (id_product) "id_product", "url"
+            FROM public."Image_products"
+            ORDER BY "id_product", "id" ASC
+        ) AS ip ON ip."id_product" = p."id_product"
+        WHERE p."stock" != 0 and p."id_seller"='${uuid}'
+        order by id asc
+        LIMIT 15 OFFSET ${offset};
+    `);
+    return getProduct[0];
+  } catch (error) {
+    console.log("dsaads");
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   getProductById,
   getListProduct,
   destroyProduct,
   createProduct,
+  getProductSeller,
 };

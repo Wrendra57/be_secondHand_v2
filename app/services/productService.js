@@ -153,9 +153,9 @@ const getListProduct = async ({ limit, offset }) => {
 
     if (getProduct.length === 0) {
       return {
-        status: 400,
+        status: 200,
         message: "produk tidak ditemukan",
-        data: null,
+        data: getProduct,
       };
     }
     return {
@@ -206,4 +206,54 @@ const getProductById = async (id_product) => {
     };
   }
 };
-module.exports = { getProductById, getListProduct, createProduct };
+const getListProductBySeller = async ({ uuid, offset }) => {
+  try {
+    console.log(offset);
+    if (!uuid) {
+      return {
+        status: 400,
+        message: "user id tidak boleh kosong",
+        data: null,
+      };
+    }
+    const getUser = await UserRepository.findByUuid(uuid);
+    console.log(getUser);
+    if (!getUser) {
+      return {
+        status: 400,
+        message: "User tidak ditemukan",
+        data: null,
+      };
+    }
+    const getProduct = await ProductRepository.getProductSeller({
+      uuid: uuid,
+      offset: offset,
+    });
+
+    if (getProduct.length === 0) {
+      return {
+        status: 400,
+        message: "produk tidak ditemukan",
+        data: null,
+      };
+    }
+    return {
+      status: 200,
+      message: "success get product",
+      data: getProduct,
+    };
+  } catch (error) {
+    console.log(error.message);
+    return {
+      status: 400,
+      message: error.message,
+      data: null,
+    };
+  }
+};
+module.exports = {
+  getProductById,
+  getListProduct,
+  createProduct,
+  getListProductBySeller,
+};

@@ -51,6 +51,23 @@ apiRouter.get(
   "/api/v1/product/:uuid",
   controllers.api.v1.productController.getProductById
 );
+apiRouter.get(
+  "/api/v1/myproduct/:offset",
+  middleware.parseToken,
+  controllers.api.v1.productController.getProductBySeller
+);
+
+// Order
+apiRouter.post(
+  "/api/v1/order/:id_product",
+  middleware.parseToken,
+  controllers.api.v1.orderController.createOrder
+);
+apiRouter.get(
+  "/api/v1/order/status/:id_product",
+  middleware.parseToken,
+  controllers.api.v1.orderController.checkOrder
+);
 /**
  * TODO: Delete this, this is just a demonstration of
  *       error handler
