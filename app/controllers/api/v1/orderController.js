@@ -39,4 +39,21 @@ const producOffered = async (req, res, next) => {
     console.log(error.message);
   }
 };
-module.exports = { createOrder, checkOrder, getMyOrder, producOffered };
+const getOrderById = async (req, res, next) => {
+  try {
+    const getOrder = await OrderService.getOrderById({
+      uuid: req.user.uuid,
+      id_order: req.params.id,
+    });
+    return res.status(getOrder.status).json(getOrder);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+module.exports = {
+  createOrder,
+  checkOrder,
+  getMyOrder,
+  producOffered,
+  getOrderById,
+};

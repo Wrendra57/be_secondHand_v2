@@ -92,4 +92,48 @@ const produkOffered = async ({ uuid }) => {
   }
 };
 
-module.exports = { createOrder, checkOrder, myOrder, produkOffered };
+const getOrderById = async ({ id_order, uuid }) => {
+  try {
+    console.log(id_order, uuid);
+    const get = await sequelize.query(`
+        select 
+          u."photo_profile" as "avatar",
+          u."name" as "buyer_name",
+          u."city" as "buyer_city",
+          u."no_hp",
+          p."name_product",
+          p."price",
+          ip."url" as "image_photo",
+          o."id_order",
+          o."status" as "status_order",
+          o."isAccept" as "isAccept_order",
+          o."price" as "offer_price",
+          o."createdAt",
+          t."isFinished" as "isFinished_transaction",
+          t."isSucces" as "isSuccess_transaction",
+          t."status" as "status_transaction"
+          
+        from public."Orders" as "o"
+        left join public."Users" as "u" on o."id_buyer"=u."uuid"
+        left join public."Products" as "p" on o."id_product"=p."id_product"
+          LEFT JOIN (
+                      SELECT DISTINCT ON (id_product) "id_product", "url"
+                      FROM public."Image_products"
+                      ORDER BY "id_product", "id" ASC
+              ) AS ip ON ip."id_product" = p."id_product"
+        left join public."Transactions" as t on t."id_order"=o."id_order"
+        where o."id_order"='${id_order}' and p."id_seller"='${uuid}'
+    `);
+    console.log(get);
+    return get[0];
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+module.exports = {
+  createOrder,
+  checkOrder,
+  myOrder,
+  produkOffered,
+  getOrderById,
+};

@@ -197,4 +197,46 @@ const produkOffered = async ({ uuid }) => {
     };
   }
 };
-module.exports = { createOrder, checkOrder, getMyOrder, produkOffered };
+
+const getOrderById = async ({ id_order, uuid }) => {
+  try {
+    const getUser = await UserRepository.findByUuid(uuid);
+    if (!getUser) {
+      return {
+        status: 400,
+        message: "User tidak ditemukan",
+        data: null,
+      };
+    }
+    const getOrder = await OrderRepository.getOrderById({
+      id_order: id_order,
+      uuid: uuid,
+    });
+    console.log(getOrder);
+    if (getOrder.length === 0) {
+      return {
+        status: 400,
+        message: "order tidak ditemukan",
+        data: null,
+      };
+    }
+    return {
+      status: 200,
+      message: "order ditemukan",
+      data: getOrder[0],
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+};
+module.exports = {
+  createOrder,
+  checkOrder,
+  getMyOrder,
+  produkOffered,
+  getOrderById,
+};

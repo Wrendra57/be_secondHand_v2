@@ -78,6 +78,11 @@ apiRouter.get(
   middleware.parseToken,
   controllers.api.v1.orderController.producOffered
 );
+apiRouter.get(
+  "/api/v1/order/:id",
+  middleware.parseToken,
+  controllers.api.v1.orderController.getOrderById
+);
 /**
  * TODO: Delete this, this is just a demonstration of
  *       error handler
