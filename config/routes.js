@@ -68,6 +68,16 @@ apiRouter.get(
   middleware.parseToken,
   controllers.api.v1.orderController.checkOrder
 );
+apiRouter.get(
+  "/api/v1/order/myOrder",
+  middleware.parseToken,
+  controllers.api.v1.orderController.getMyOrder
+);
+apiRouter.get(
+  "/api/v1/order/myOffer",
+  middleware.parseToken,
+  controllers.api.v1.orderController.producOffered
+);
 /**
  * TODO: Delete this, this is just a demonstration of
  *       error handler

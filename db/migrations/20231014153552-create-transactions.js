@@ -23,6 +23,12 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
       },
+      isFinished: {
+        type: Sequelize.BOOLEAN,
+      },
+      isSucces: {
+        type: Sequelize.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

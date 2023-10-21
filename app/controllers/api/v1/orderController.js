@@ -21,4 +21,22 @@ const checkOrder = async (req, res, next) => {
     return res.status(check.status).json(check);
   } catch (error) {}
 };
-module.exports = { createOrder, checkOrder };
+
+const getMyOrder = async (req, res) => {
+  try {
+    const get = await OrderService.getMyOrder({ uuid: req.user.uuid });
+    return res.status(get.status).json(get);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const producOffered = async (req, res, next) => {
+  try {
+    const getOffer = await OrderService.produkOffered({ uuid: req.user.uuid });
+    return res.status(getOffer.status).json(getOffer);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+module.exports = { createOrder, checkOrder, getMyOrder, producOffered };

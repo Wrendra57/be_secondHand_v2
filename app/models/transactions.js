@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       id_transaction: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4 },
       id_order: DataTypes.UUID,
       status: DataTypes.STRING,
+      isFinished: DataTypes.BOOLEAN,
+      isSucces: DataTypes.BOOLEAN,
     },
     {
       sequelize,

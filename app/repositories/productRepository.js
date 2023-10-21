@@ -103,7 +103,7 @@ const getProductSeller = async ({ uuid, offset }) => {
         ) AS ip ON ip."id_product" = p."id_product"
         WHERE p."stock" != 0 and p."id_seller"='${uuid}'
         order by id asc
-        LIMIT 15 OFFSET ${offset};
+        LIMIT 30 OFFSET ${offset};
     `);
     return getProduct[0];
   } catch (error) {
