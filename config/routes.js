@@ -48,6 +48,10 @@ apiRouter.get(
   controllers.api.v1.productController.getListProduct
 );
 apiRouter.get(
+  "/api/v1/product/:category/:limit/:offset",
+  controllers.api.v1.productController.getProductByCategory
+);
+apiRouter.get(
   "/api/v1/product/:uuid",
   controllers.api.v1.productController.getProductById
 );
@@ -56,6 +60,7 @@ apiRouter.get(
   middleware.parseToken,
   controllers.api.v1.productController.getProductBySeller
 );
+
 
 // Order
 apiRouter.post(

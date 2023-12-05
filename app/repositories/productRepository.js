@@ -37,6 +37,34 @@ const getListProduct = async ({ limit, offset }) => {
   }
 };
 
+const getListByCategory = async ({ limit, offset, category }) => {
+  try {
+    const getList = await sequelize.query(`
+    SELECT 
+          p."id" as "id",
+          p."id_product"  ,
+          p."id_seller"  ,
+          p."name_product" ,
+          p."stock",
+          p."price",
+          p."category",
+          ip."url" as "foto"
+    FROM public."Products" as "p"
+    LEFT JOIN (
+        SELECT DISTINCT ON (id_product) "id_product", "url"
+        FROM public."Image_products"
+        ORDER BY "id_product", "id" ASC
+    ) AS ip ON ip."id_product" = p."id_product"
+    WHERE p."stock" != 0 AND p."category"='${category}'
+    LIMIT ${limit} OFFSET ${offset};
+    `);
+    return getList[0];
+  } catch (error) {
+    console.log("error get ListByCategory repositories");
+    console.log(error.message);
+  }
+};
+
 const getProductById = async (params) => {
   try {
     const getProduct = await sequelize.query(`
@@ -115,6 +143,7 @@ const getProductSeller = async ({ uuid, offset }) => {
 module.exports = {
   getProductById,
   getListProduct,
+  getListByCategory,
   destroyProduct,
   createProduct,
   getProductSeller,

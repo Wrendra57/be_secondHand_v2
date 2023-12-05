@@ -36,6 +36,23 @@ const getListProduct = async (req, res, next) => {
     };
   }
 };
+const getProductByCategory = async (req, res, next) => {
+  try {
+    const { category, limit, offset } = req.params;
+    const getProduct = await ProductService.getLIstProductByCategory({
+      limit,
+      offset,
+      category,
+    });
+    return res.status(getProduct.status).json(getProduct);
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+};
 const getProductById = async (req, res, next) => {
   try {
     const getProduct = await ProductService.getProductById(req.params.uuid);
@@ -70,4 +87,5 @@ module.exports = {
   createProduct,
   getListProduct,
   getProductBySeller,
+  getProductByCategory,
 };

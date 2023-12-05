@@ -206,6 +206,52 @@ const getProductById = async (id_product) => {
     };
   }
 };
+const getLIstProductByCategory = async ({ limit, offset, category }) => {
+  try {
+    if (!limit) {
+      return {
+        status: 400,
+        message: "limit tidak boleh kosong",
+        data: null,
+      };
+    }
+    if (!offset) {
+      return {
+        status: 400,
+        message: "offset tidak boleh kosong",
+        data: null,
+      };
+    }
+    if (!category) {
+      return {
+        status: 400,
+        message: "category tidak boleh kosong",
+        data: null,
+      };
+    }
+    const getProduct = await ProductRepository.getListByCategory({
+      limit: limit,
+      offset: (offset - 1) * limit,
+      category: category,
+    });
+
+    if (getProduct.length === 0) {
+      return {
+        status: 200,
+        message: "produk tidak ditemukan",
+        data: getProduct,
+      };
+    }
+    return {
+      status: 200,
+      message: "success get product",
+      data: getProduct,
+    };
+  } catch (error) {
+    console.log("error get list product by category service");
+    console.log(error.message);
+  }
+};
 const getListProductBySeller = async ({ uuid, offset }) => {
   try {
     console.log(offset);
@@ -254,6 +300,7 @@ const getListProductBySeller = async ({ uuid, offset }) => {
 module.exports = {
   getProductById,
   getListProduct,
+  getLIstProductByCategory,
   createProduct,
   getListProductBySeller,
 };
